@@ -1,6 +1,7 @@
 import janus_swi as kb
 import var
 import random
+import os
 class MineSweeperSolver:
     def __init__(self):
         kb.consult(os.path.join(var.BASE_DIR,var.KB_FILE_NAME))
@@ -10,7 +11,7 @@ class MineSweeperSolver:
     def assert_in_kb(self,knowledge:str):
         if knowledge in self.assertions:return
         self.assertions.append(knowledge)
-        query = f"asserta{knowledge}"
+        query = f"asserta({knowledge})"
         kb.query_once(query)
         
     def update_knowledge(self,data):
@@ -32,7 +33,7 @@ class MineSweeperSolver:
                 if not answer['truth']:break
                 del answer['truth']
             result.append(answer)
-        return answer
+        return result
     def generate_next_moves(self):
         kb.query_once('find_mines.')
         found_mines = False
@@ -46,9 +47,9 @@ class MineSweeperSolver:
             actions.append(('M',x,y))
             found_mines = True
         next_actions = self.ask('action(X,Y).')
-        for action in actions:
+        for action in next_actions:
             x,y = action['X'],action['Y']
-            if (x,y) in self.clickced:continue
+            if (x,y) in self.clicked:continue
             self.clicked.append((x,y))
             actions.append(('S',x,y))
             found_safe = True
