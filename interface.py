@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
+from selenium.webdriver import ActionChains
 from chromedriver_autoinstaller import install as webdriver_install
 class MineSweeperInterface:
     def __init__(self):
@@ -34,3 +35,9 @@ class MineSweeperInterface:
                     row.append(clue)
             result.append(row)
         return result
+    def click_on_cell(self,x,y):
+        self.cell_elements[y][x].click()
+    def rightclick_on_cell(self,x,y):
+        action_chain = ActionChains(self.driver)
+        action_chain.context_click(self.cell_elements[y][x]).perform()
+
