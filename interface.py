@@ -5,8 +5,12 @@ from selenium.webdriver.common.by import By
 from chromedriver_autoinstaller import install as webdriver_install
 class MineSweeperInterface:
     def __init__(self):
-        webdriver_service = webdriver.ChromeService(webdriver_install())
-        self.driver = webdriver.Chrome(service=webdriver_service)
+        webdriver_service = webdriver.ChromeService(webdriver_install(no_ssl=True))
+        webdriver_options = webdriver.ChromeOptions()
+        webdriver_options.add_argument('--ignore-ssl-errors=yes')
+        webdriver_options.add_argument('--ignore-certificate-errors')
+        webdriver_options.set_capability('pageLoadStrategy','eager')
+        self.driver = webdriver.Chrome(service=webdriver_service,options=webdriver_options)
         self.driver.get('https://minesweeperonline.com/#beginner')
         self.cell_elements = []
         self.load_elements()
