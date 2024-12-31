@@ -20,7 +20,6 @@ class MineSweeperSolver:
                 state = data[i][j]
                 if state == '-':continue
                 if state == 'X':continue
-                state = int(state)
                 self.assert_in_kb(f"safe({j},{i})")
                 self.assert_in_kb(f"clue({j},{i},{state})") 
     def ask(self,query:str):
