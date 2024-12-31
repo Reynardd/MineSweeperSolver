@@ -13,8 +13,21 @@ class MineSweeperInterface:
         webdriver_options.set_capability('pageLoadStrategy','eager')
         self.driver = webdriver.Chrome(service=webdriver_service,options=webdriver_options)
         self.driver.get('https://minesweeperonline.com/#beginner')
+        self.face_element = WebDriverWait(self.driver,5).until(EC.presence_of_element_located((By.ID,'face')))
         self.cell_elements = []
         self.load_elements()
+    def check_for_alert(self):
+        try:
+            alert = self.driver.switch_to.alert
+            alert.send_keys('Reynard')
+            alert.accept()
+        except:pass
+    def get_game_state(self):
+        self.check_for_alert()
+        face = self.face_element.get_attribute('class')
+        if face=='facesmile':return 'Playing'
+        if face=='facedead':return 'Lost'
+        return 'Won'
     def load_elements(self):
         wait = WebDriverWait(self.driver,5)
         for i in range(9):
@@ -33,11 +46,15 @@ class MineSweeperInterface:
                 elif cell_class.startswith('square open'):
                     clue = int(cell_class.removeprefix('square open'))
                     row.append(clue)
+                else:
+                    row.append('X')
             result.append(row)
         return result
     def click_on_cell(self,x,y):
+        self.check_for_alert()
         self.cell_elements[y][x].click()
     def rightclick_on_cell(self,x,y):
+        self.check_for_alert()
         action_chain = ActionChains(self.driver)
         action_chain.context_click(self.cell_elements[y][x]).perform()
 
