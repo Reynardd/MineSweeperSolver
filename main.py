@@ -1,4 +1,4 @@
-from Solver import MineSweeperSolver
+from solver import MineSweeperSolver
 from interface import MineSweeperInterface
 import time
 interface = MineSweeperInterface()
