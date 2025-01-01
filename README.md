@@ -28,3 +28,7 @@ to solve the issue try these:
 [DLL file missing](https://www.swi-prolog.org/FAQ/FindResources.md)
 
 in cmd: ```setx SWI_HOME_DIR "C:\Program Files\swipl"``` 
+
+## ToDo
+#### remove while loop in solver for random selection
+#### make it work for any size
