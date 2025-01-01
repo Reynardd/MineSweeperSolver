@@ -4,6 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver import ActionChains
 from chromedriver_autoinstaller import install as webdriver_install
+import var
 class MineSweeperInterface:
     def __init__(self):
         webdriver_service = webdriver.ChromeService(webdriver_install(no_ssl=True))
@@ -12,9 +13,10 @@ class MineSweeperInterface:
         webdriver_options.add_argument('--ignore-certificate-errors')
         webdriver_options.set_capability('pageLoadStrategy','eager')
         self.driver = webdriver.Chrome(service=webdriver_service,options=webdriver_options)
-        self.driver.get('https://minesweeperonline.com/#beginner')
+        self.driver.get(var.WEBSITE_URL)
         self.face_element = WebDriverWait(self.driver,5).until(EC.presence_of_element_located((By.ID,'face')))
         self.cell_elements = []
+        self.cell_elements_cache = [[-1 for _ in range(9)] for _ in range(9)]
         self.load_elements()
     def check_for_alert(self):
         try:
@@ -41,10 +43,14 @@ class MineSweeperInterface:
         for i in range(9):
             row = []
             for j in range(9):
+                if self.cell_elements_cache[i][j]!=-1: 
+                    row.append(self.cell_elements_cache[i][j])
+                    continue
                 cell_class = self.cell_elements[i][j].get_attribute('class')
                 if cell_class == 'square blank':row.append('-')
                 elif cell_class.startswith('square open'):
                     clue = int(cell_class.removeprefix('square open'))
+                    self.cell_elements_cache[i][j] = clue
                     row.append(clue)
                 else:
                     row.append('X')
